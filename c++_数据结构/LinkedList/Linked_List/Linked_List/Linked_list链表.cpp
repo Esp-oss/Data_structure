@@ -2,9 +2,6 @@
 #include <string>
 using namespace std;
 
-//创建一个数据类型
-struct Element_type {
-};
 
 /*
 typedef--定义一个数据类型的别名
@@ -16,13 +13,15 @@ typedef struct List* List_address;
 
 //线性表的链式存储实现，不要求逻辑上相邻的两个元素物理上也相邻
 struct List {
-	Element_type data;
+	int data;
 	List_address next;
 };
 
 //创建空线性表
-void List_MakeEmpty() {
-
+List_address List_MakeEmpty() {
+	List_address head = new List;
+	head ->next = NULL;
+	return head;
 }
 
 //根据位序查找相应元素,L作为形参是以地址的形式传输，数组也是
@@ -42,7 +41,7 @@ List_address elementFind_of_index(int num, List_address head) {
 }
 
 //根据元素返回元素的地址,要查找的元素为data_input
-List_address indexFind_of_element(Element_type data_input, List_address head) {
+List_address indexFind_of_element(int data_input, List_address head) {
 	List_address p = head;//p指向表的第一个节点
 	while (p != NULL && p->data != data_input) {//element_type含有两个数据类型，不知道比较哪个，会报错，需要重载
 		p = p->next;//p指向当前节点记录的下一个节点的地址
@@ -51,7 +50,7 @@ List_address indexFind_of_element(Element_type data_input, List_address head) {
 }
 
 //在位置i处插入一个新元素
-List_address Insert(Element_type x, int i, List_address head) {
+List_address Insert(int x, int i, List_address head) {
 	//先申请一块空间s,大小储存next和data，即单独创立一个节点s,但暂时没有接入链表中
 	//要接入位置i,逻辑上为s的前缀是与节点i-1链接,后继与节点i链接
 	//步骤1:创建节点s
@@ -85,7 +84,23 @@ List_address Insert(Element_type x, int i, List_address head) {
 }
 
 //删除指定位序i的元素
-void Delete(int i, List L) {
+void Delete(int i, List_address head) {
+	List_address temp, i_index;
+	//判断i是否为1
+	if (i == 1) {
+		temp = head;
+		head = head->next;
+		free(temp);
+	}
+	i_index = elementFind_of_index(i, head);
+	temp = elementFind_of_index(i - 1, head);
+	if (i_index == NULL || temp == NULL) {
+		printf("参数i错误");
+	}
+	else {
+		temp->next = i_index->next;
+		free(i_index);
+	}
 
 }
 
